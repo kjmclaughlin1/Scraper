@@ -86,18 +86,19 @@ namespace Scraper
 
             if (textNodes.Any())
             {
-                foreach (var strWord in textNodes.Where(textNode => !string.IsNullOrEmpty(textNode.InnerText)).Select(textNode => Regex.Replace(textNode.InnerText, "[^a-zA-Z0-9]", " ")).Select(str => str.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)).SelectMany(strWords => strWords))
+                foreach (var strWord in textNodes.Where(textNode => !string.IsNullOrEmpty(textNode.InnerText)).Select(textNode => Regex.Replace(textNode.InnerText, "[^a-zA-Z0-9'. ]", " ")).Select(str => str.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)).SelectMany(strWords => strWords))
                 {
-                    TotalWords.Add(strWord);
-                    if(Words.Any(item => item.word == strWord))
+                    var encoded = WebUtility.HtmlEncode(strWord);
+                    TotalWords.Add(encoded);
+                    if(Words.Any(item => item.word == encoded))
                     {
-                        var obj = Words.FirstOrDefault(x => x.word == strWord);
+                        var obj = Words.FirstOrDefault(x => x.word == encoded);
                         if (obj != null) obj.amount += 1;
                     }
                     else
                     {
                         var thisWord = new Words();
-                        thisWord.word = strWord;
+                        thisWord.word = encoded;
                         thisWord.amount = 1;
                         Words.Add(thisWord);
                     }
