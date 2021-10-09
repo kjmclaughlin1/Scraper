@@ -38,7 +38,7 @@ namespace Scraper
             var url = URL.Text;
 
             //add http if needed
-            if (!url.StartsWith("http://") || !url.StartsWith("https://"))
+            if (!(url.StartsWith("http://") || url.StartsWith("https://")))
             {
                 url = "http://" + url;
             }
@@ -65,7 +65,7 @@ namespace Scraper
             var doc = new HtmlDocument();
             doc.LoadHtml(html);
 
-            var imageNodes = doc.DocumentNode.SelectNodes("//img").Where(x => x.Attributes["src"].Value.ToLower().Contains(".jpg") || x.Attributes["src"].Value.ToLower().Contains(".png")).ToList();
+            var imageNodes = doc.DocumentNode.SelectNodes("//img/@src").Where(x => x.Attributes["src"].Value.ToLower().Contains(".jpg") || x.Attributes["src"].Value.ToLower().Contains(".png")).ToList();
 
             var textNodes = doc.DocumentNode.Descendants().Where(n => n.NodeType == HtmlNodeType.Text && n.ParentNode.Name != "script" && n.ParentNode.Name != "style").ToList();
 
